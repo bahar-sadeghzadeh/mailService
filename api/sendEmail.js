@@ -8,7 +8,7 @@ const port = 3001;
 
 app.use(cors());
 app.use(express.json());
-async function sendEmail(to, subject, text) {
+async function handler(req, res) {
   // First, define send settings by creating a new transporter:
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -26,9 +26,9 @@ async function sendEmail(to, subject, text) {
   // Define and send message inside transporter.sendEmail() and await info about send from promise:
   let info = await transporter.sendMail({
     from: `"DentistTest" <${process.env.EMAIL_USER}>`,
-    to: to,
-    subject: subject,
-    html: text,
+    to: req.to,
+    subject: req.subject,
+    html: req.text,
   });
 
   // Random ID generated after successful send (optional)
