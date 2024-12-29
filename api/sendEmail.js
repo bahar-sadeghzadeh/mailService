@@ -1,7 +1,13 @@
-const express = require("express");
-const nodemailer = require("nodemailer");
-const cors = require("cors");
-require("dotenv").config();
+// const express = require("express");
+// const nodemailer = require("nodemailer");
+// const cors = require("cors");
+// require("dotenv").config();
+
+import express from "express";
+import nodemailer from "nodemailer";
+import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 const port = 3001;
@@ -48,4 +54,4 @@ async function handler(req, res) {
 //   console.log(`Server running on port ${port}`);
 // });
 
-export default sendEmail;
+export default handler;
