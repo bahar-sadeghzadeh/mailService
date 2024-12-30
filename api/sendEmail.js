@@ -1,20 +1,20 @@
-// const express = require("express");
-// const nodemailer = require("nodemailer");
-// const cors = require("cors");
-// require("dotenv").config();
-
-import express from "express";
 import nodemailer from "nodemailer";
-import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 
-const app = express();
+export default async function handler(req, res) {
+  const { to, subject, text } = req.body;
 
-app.use(cors());
-app.use(express.json());
-async function handler(req, res) {
-  // First, define send settings by creating a new transporter:
+  // Ensure the method is POST
+  if (req.method !== "post") {
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
+  if (!to) {
+    return res.status(400).json({ error: "Recipient email is required" });
+  }
+
+  // Nodemailer configuration
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
@@ -28,15 +28,20 @@ async function handler(req, res) {
     },
   });
 
-  // Define and send message inside transporter.sendEmail() and await info about send from promise:
-  await transporter.sendMail({
+  const mailOptions = {
     from: `"DentistTest" <${process.env.EMAIL_USER}>`,
-    to: req.to,
-    subject: req.subject,
-    html: req.text,
-  });
+    to,
+    subject,
+    html: text,
+  };
 
-  res.status(200).json({ success: true });
+  // Send email
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent:", info.response);
+    res.status(200).json({ message: "Email sent successfully", info });
+  } catch (err) {
+    console.error("Error sending email:", err);
+    res.status(500).json({ error: "Failed to send email" });
+  }
 }
-
-export default handler;
