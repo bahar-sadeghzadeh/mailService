@@ -10,7 +10,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const port = 3001;
 
 app.use(cors());
 app.use(express.json());
@@ -30,28 +29,14 @@ async function handler(req, res) {
   });
 
   // Define and send message inside transporter.sendEmail() and await info about send from promise:
-  let info = await transporter.sendMail({
+  await transporter.sendMail({
     from: `"DentistTest" <${process.env.EMAIL_USER}>`,
     to: req.to,
     subject: req.subject,
     html: req.text,
   });
 
-  // Random ID generated after successful send (optional)
-  //   console.log(info.messageId);
-
   res.status(200).json({ success: true });
 }
-
-// app.post("/send-email", (req, res) => {
-//   const { to, subject, text } = req.body;
-
-//   sendEmail(to, subject, text).catch((err) => console.log("error: ", err));
-// });
-
-// app.listen(port, () => {
-//   console.log(`user email: ${process.env.EMAIL_USER}`);
-//   console.log(`Server running on port ${port}`);
-// });
 
 export default handler;
