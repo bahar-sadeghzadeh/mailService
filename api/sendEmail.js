@@ -13,7 +13,7 @@ export default async function handler(req, res) {
 
   // Handle `POST` request
   if (req.method === "POST") {
-    const { to, subject, text } = req.body;
+    const { from, to, subject, text } = req.body;
 
     if (!to) {
       return res.status(400).json({ error: "Recipient email is required" });
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     });
 
     const mailOptions = {
-      from: `"DentistTest" <${process.env.EMAIL_USER}>`,
+      from: `${from} <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html: text,
